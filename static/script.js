@@ -1,6 +1,4 @@
-// script.js
 
-// ---------- LOGIN ----------
 document.getElementById("loginForm")?.addEventListener("submit", async (e) => {
   e.preventDefault();
 
@@ -30,7 +28,6 @@ document.getElementById("loginForm")?.addEventListener("submit", async (e) => {
   }
 });
 
-// ---------- REGISTER ----------
 document.getElementById("registerForm")?.addEventListener("submit", async (e) => {
   e.preventDefault();
 
@@ -49,8 +46,8 @@ document.getElementById("registerForm")?.addEventListener("submit", async (e) =>
     const data = await res.json();
 
     if (data.success) {
-      localStorage.setItem("loggedIn", "true"); // Guarda sesión
-      window.location.href = "index.html"; // Redirige al index
+      localStorage.setItem("loggedIn", "true"); 
+      window.location.href = "index.html"; 
     } else {
       alert("Error al registrar el usuario");
     }
@@ -60,14 +57,12 @@ document.getElementById("registerForm")?.addEventListener("submit", async (e) =>
   }
 });
 
-// ---------- PROTECCIÓN DEL INDEX ----------
 if (window.location.pathname.includes("index.html")) {
   if (!localStorage.getItem("loggedIn")) {
     window.location.href = "login.html";
   }
 }
 
-// ---------- LOGOUT ----------
 document.getElementById("logoutBtn")?.addEventListener("click", () => {
   localStorage.removeItem("loggedIn");
   window.location.href = "login.html";
