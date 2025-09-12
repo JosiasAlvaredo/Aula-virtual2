@@ -2,7 +2,6 @@ drop database if exists aula_virtual;
 create database aula_virtual;
 use aula_virtual;
 
--- Usuarios
 create table usuarios (
 	id_usuario int auto_increment primary key,
     nombre varchar(30),
@@ -14,7 +13,6 @@ create table usuarios (
     fecha_registro datetime default current_timestamp
 );
 
--- Clases
 create table clases (
 	id_clase int auto_increment primary key,
     nombre_clase varchar(30),
@@ -24,7 +22,6 @@ create table clases (
     fecha_creacion datetime default current_timestamp
 );
 
--- Relación usuarios <-> clases
 create table ingresos (
 	id_ingreso int auto_increment primary key,
 	id_clase int,
@@ -34,7 +31,6 @@ create table ingresos (
     foreign key (id_usuario) references usuarios (id_usuario)
 );
 
--- Publicaciones (anuncios, materiales, tareas)
 create table publicaciones (
 	id_publicacion int auto_increment primary key,
     id_clase int,
@@ -49,7 +45,6 @@ create table publicaciones (
 	foreign key (id_creador) references usuarios (id_usuario)
 );
 
--- Foros
 create table foros (
 	id_foro int auto_increment primary key,
     id_clase int,
@@ -61,7 +56,6 @@ create table foros (
 	foreign key (id_creador) references usuarios (id_usuario)
 );
 
--- Entregas (respuestas a tareas)
 create table entregas (
 	id_entrega int auto_increment primary key,
     id_tarea int,
@@ -72,7 +66,6 @@ create table entregas (
     foreign key (id_alumno) references usuarios (id_usuario)
 );
 
--- Devoluciones (correcciones de profesores)
 create table devoluciones (
 	id_devolucion int auto_increment primary key,
     id_entrega int,
@@ -84,7 +77,6 @@ create table devoluciones (
     foreign key (id_profesor) references usuarios (id_usuario)
 );
 
--- Mensajes privados
 create table mensajes_privados (
 	id_mensaje int auto_increment primary key,
     id_publicacion int,
@@ -98,7 +90,6 @@ create table mensajes_privados (
     foreign key (id_receptor) references usuarios (id_usuario)
 );
 
--- Mensajes en foros
 create table mensajes_foro (
 	id_mensaje int auto_increment primary key,
     id_foro int,
