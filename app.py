@@ -3,21 +3,19 @@ import mysql.connector
 import bcrypt
 
 app = Flask(__name__)
-app.secret_key = "clave_secreta_segura"  # cámbiala por algo único
+app.secret_key = "Renault12345"  
 
-# Conexión a MySQL
 def get_db_connection():
     return mysql.connector.connect(
         host="localhost",
         user="root",
-        password="root",   # pon tu password real
+        password="root",   
         database="aula_virtual"
     )
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
-        # viene del formulario de login
         email = request.form["email"]
         password = request.form["password"]
 
@@ -52,14 +50,12 @@ def register():
     conn.close()
     return redirect(url_for("login"))
 
-# Ruta protegida (index)
 @app.route("/")
 def index():
     if "user_id" not in session:
         return redirect(url_for("login"))
     return render_template("index.html")
 
-# Cerrar sesión
 @app.route("/logout")
 def logout():
     session.clear()
