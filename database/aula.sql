@@ -100,3 +100,9 @@ create table mensajes_foro (
     foreign key (id_foro) references foros (id_foro),
     foreign key (id_emisor) references usuarios (id_usuario)
 );
+
+--has una entrada para la tabla usuarios
+insert into usuarios (nombre, apellido, posicion, email, contrasena, foto_perfil) values
+('Admin', 'User', 'A', 'example@example.com', 'admin123', 'https://www.example.com/admin.jpg'),
+('John', 'Doe', 'P', 'example2@example.com', 'profesor123', 'https://www.example.com/profesor.jpg'),
+('Jane', 'Smith', 'E', 'example3@example.com', 'estudiante123', 'https://www.example.com/estudiante.jpg');

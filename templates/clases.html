@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Gestión de Clases</title>
+    <link rel="stylesheet" href="../static/style.css">
+</head>
+<body>
+    <div class="sidebar">
+        <div class="clase" title="Inicio">
+            <a href="{{ url_for('index') }}" style="color:inherit;text-decoration:none;">🏠</a>
+        </div>
+        {% for clase in clases %}
+        <div class="clase" title="{{ clase.nombre_clase }}">
+            {{ clase.nombre_clase[0]|upper }}
+        </div>
+        {% endfor %}
+    </div>
+    <div class="main">
+        <div class="header">
+            <h1>Clases</h1>
+        </div>
+        <div class="content">
+            <form action="{{ url_for('crear_clase') }}" method="post" style="margin-bottom:2rem;">
+                <input type="text" name="nombre_clase" placeholder="Nombre de la clase" required>
+                <input type="text" name="codigo_ingreso" placeholder="Código de ingreso" required>
+                <input type="text" name="banner" placeholder="URL del banner">
+                <input type="text" name="descripcion" placeholder="Descripción">
+                <button type="submit">Crear Clase</button>
+            </form>
+            <ul style="padding:0;">
+                {% for clase in clases %}
+                <li style="background:#36393f;margin-bottom:1rem;padding:1rem;border-radius:8px;list-style:none;display:flex;align-items:center;justify-content:space-between;">
+                    <form action="{{ url_for('editar_clase', id_clase=clase.id_clase) }}" method="post" style="display:flex;gap:8px;align-items:center;">
+                        <input type="text" name="nombre_clase" value="{{ clase.nombre_clase }}" required>
+                        <input type="text" name="codigo_ingreso" value="{{ clase.codigo_ingreso }}" required>
+                        <input type="text" name="banner" value="{{ clase.banner }}">
+                        <input type="text" name="descripcion" value="{{ clase.descripcion }}">
+                        <button type="submit">Editar</button>
+                    </form>
+                    <a href="{{ url_for('eliminar_clase', id_clase=clase.id_clase) }}" style="color:#dc3545;">Eliminar</a>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

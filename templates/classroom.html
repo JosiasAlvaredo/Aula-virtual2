@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ clase.nombre_clase }} - Classroom</title>
+    <link rel="stylesheet" href="../static/style.css">
+    <style>
+        .form-box {
+            background: #23272a;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .form-box textarea, .form-box input[type="file"], .form-box input[type="text"], .form-box input[type="number"], .form-box input[type="datetime-local"] {
+            width: 100%;
+            margin-bottom: 0.5rem;
+            padding: 0.5rem;
+            border-radius: 4px;
+            border: none;
+            background: #36393f;
+            color: #fff;
+        }
+        .form-box button {
+            background: #5865f2;
+            color: #fff;
+            border: none;
+            padding: 0.5rem 1.2rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .form-box button:hover {
+            background: #4752c4;
+        }
+        .file-link {
+            color: #4fc3f7;
+            text-decoration: underline;
+            font-weight: bold;
+        }
+        .file-link:hover {
+            color: #0288d1;
+        }
+        .back-btn {
+            display: inline-block;
+            margin-bottom: 1rem;
+            background: #5865f2;
+            color: #fff;
+            border: none;
+            padding: 0.5rem 1.2rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            text-decoration: none;
+        }
+        .back-btn:hover {
+            background: #4752c4;
+        }
+    </style>
+</head>
+<body>
+    <div class="main">
+        <div class="header">
+            <a href="{{ url_for('clases') }}" class="back-btn">← Volver al menú</a>
+            <h1>{{ clase.nombre_clase }}</h1>
+            <p>{{ clase.descripcion }}</p>
+        </div>
+        <div class="content">
+            <img src="{{ clase.banner }}" alt="Banner" style="max-width:100%;border-radius:8px;">
+            <p>Código de ingreso: <strong>{{ clase.codigo_ingreso }}</strong></p>
+
+            <h2>Publicar mensaje</h2>
+            <form class="form-box" action="{{ url_for('publicar', id_clase=clase.id_clase) }}" method="post" enctype="multipart/form-data">
+                <textarea name="mensaje" placeholder="Escribe una publicación..." required></textarea>
+                <input type="file" name="multimedia">
+                <button type="submit">Publicar</button>
+            </form>
+
+            <h2>Crear tarea</h2>
+            <form class="form-box" action="{{ url_for('crear_tarea', id_clase=clase.id_clase) }}" method="post" enctype="multipart/form-data">
+                <textarea name="mensaje" placeholder="Descripción de la tarea" required></textarea>
+                <input type="datetime-local" name="fecha_entrega" required>
+                <input type="file" name="multimedia">
+                <button type="submit">Crear tarea</button>
+            </form>
+
+            <h2>Publicaciones y tareas</h2>
+            {% for pub in publicaciones %}
+            <div style="background:#36393f;margin-bottom:1rem;padding:1rem;border-radius:8px;">
+                <p>
+                    <strong>{{ pub.nombre_creador }}</strong>
+                    <small>{{ pub.fecha_publicacion }}</small>
+                    {% if pub.entregable %}
+                        <span style="color:#ffc107;">[Tarea]</span>
+                        {% if pub.fecha_entrega %}
+                            <span>Entrega hasta: {{ pub.fecha_entrega }}</span>
+                        {% endif %}
+                    {% endif %}
+                </p>
+                <p>{{ pub.mensaje }}</p>
+                {% if pub.multimedia %}
+                    <a href="{{ pub.multimedia }}" target="_blank" class="file-link">Archivo adjunto</a>
+                {% endif %}
+
+                {% if pub.entregable %}
+                    <form class="form-box" action="{{ url_for('entregar_tarea', id_publicacion=pub.id_publicacion) }}" method="post" enctype="multipart/form-data" style="margin-top:1rem;">
+                        <input type="file" name="multimedia" required>
+                        <button type="submit">Entregar tarea</button>
+                    </form>
+                    <h4>Entregas</h4>
+                    {% for entrega in pub.entregas %}
+                        <div style="background:#23272a;padding:0.5rem;margin-bottom:0.5rem;border-radius:6px;">
+                            <strong>{{ entrega.nombre_alumno }}</strong> entregó:
+                            {% if entrega.multimedia %}
+                                <a href="{{ entrega.multimedia }}" target="_blank" class="file-link">Archivo</a>
+                            {% endif %}
+                            <form class="form-box" action="{{ url_for('calificar_entrega', id_entrega=entrega.id_entrega) }}" method="post" style="display:inline;">
+                                <input type="number" name="calificacion" min="0" max="100" placeholder="Calificación" required>
+                                <input type="text" name="aclaraciones" placeholder="Aclaraciones">
+                                <button type="submit">Calificar</button>
+                            </form>
+                            {% if entrega.devolucion %}
+                                <div style="margin-top:0.5rem;">
+                                    <strong>Calificación:</strong> {{ entrega.devolucion.calificacion }}<br>
+                                    <strong>Profesor:</strong> {{ entrega.devolucion.nombre_profesor }}<br>
+                                    <strong>Aclaraciones:</strong> {{ entrega.devolucion.aclaraciones }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+
+                <div style="margin-left:2rem;">
+                    <form class="form-box" action="{{ url_for('comentar', id_publicacion=pub.id_publicacion) }}" method="post" style="margin-bottom:0.5rem;">
+                        <input type="text" name="comentario" placeholder="Comentar..." required>
+                        <button type="submit">Comentar</button>
+                    </form>
+                    {% for com in pub.comentarios %}
+                        <p><strong>{{ com.nombre_emisor }}</strong>: {{ com.mensaje }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>

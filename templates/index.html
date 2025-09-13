@@ -1,3 +1,5 @@
+<!-- arregla la funcione de los botones de los cursos -->
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -9,9 +11,16 @@
 </head>
 <body>
     <div class="sidebar">
-        <div class="clase" data-clase="new">+</div>
-        <div class="clase" data-clase="A">A</div>
-        <div class="clase" data-clase="B">B</div>
+        <a href="{{ url_for('clases') }}" style="text-decoration:none;">
+            <div class="clase" data-clase="new">+</div>
+        </a>
+        {% for clase in clases %}
+            <div class="clase" title="{{ clase.nombre_clase }}">
+                <a href="{{ url_for('classroom', id_clase=clase.id_clase) }}" style="color:inherit;text-decoration:none;">
+                    {{ clase.nombre_clase[0]|upper }}
+                </a>
+            </div>
+        {% endfor %}
     </div>
 
     <div class="main">
